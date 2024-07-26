@@ -125,6 +125,20 @@ on order_details.pizza_id = pizzas.pizza_id
 group by orders.date) as Sales
 
 
+--CTE Method
+
+WITH Sales as (
+select orders.date, SUM(order_details.quantity * pizzas.price) as revenue
+from orders join order_details
+on orders.order_id = order_details.order_id
+join pizzas
+on order_details.pizza_id = pizzas.pizza_id
+group by orders.date
+)
+select date, SUM(revenue) over (order by date) as cum_revenue
+from Sales
+
+
 --3. Determine the top 3 most ordered pizza types based on revenue for each pizza category.
 
 select category, name, revenue
